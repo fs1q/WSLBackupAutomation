@@ -1,7 +1,7 @@
 ############################################################
 #                                                          #
 #  Script: WSLBackupAutomation                             #
-#  Last Updated: 2025-04-23                  Version 1.3   #
+#  Last Updated: 2025-04-24                  Version 1.4   #
 #  Written by: Fabio Siqueira                              #
 #                                                          #
 ############################################################
@@ -9,18 +9,25 @@
 # Distribution                                             #
 ############################################################
 
-# Settings
-$distributionName = "Ubuntu" # WSL distribution to export
-$backupDir = "C:\..." # Directory for backups
+# Settings - You need to configure this part!
+param (
+    [string]$distributionName = "Distribution", #Example: "Ubuntu"
+    [string]$backupDir = "C:\..." #Example: "C:\WSLBackup"
+)
 
-# Create the backup file name with the current date
-$backupFile = "ubuntu_export_$(Get-Date -Format 'yyyy-MM-dd').tar"
+# Check if backup directory exists, if not, create it
+if (-not (Test-Path -Path $backupDir)) {
+    New-Item -ItemType Directory -Path $backupDir
+    Write-Host "Backup directory created: $backupDir"
+}
+
+# Create the backup file name with the current date and time
+$backupFile = "wsl_export_$(Get-Date -Format 'yyyy-MM-dd_HH-mm-ss').tar"
 $backupPath = Join-Path -Path $backupDir -ChildPath $backupFile
 
 # Function to export the WSL distribution
 function Export-WSL {
     try {
-        # Execute the export command
         wsl --export $distributionName $backupPath
         Write-Host "Backup created: $backupPath"
     } catch {
@@ -30,12 +37,10 @@ function Export-WSL {
 
 # Function to clean up old backup files
 function Clean-Up-OldBackups {
-    # Get all backup files, sorted by last write time (newest first)
-    $files = Get-ChildItem -Path $backupDir -Filter "ubuntu_export_*.tar" | Sort-Object LastWriteTime -Descending
+    # Get all backup files matching the new pattern
+    $files = Get-ChildItem -Path $backupDir -Filter "wsl_export_*.tar" | Sort-Object LastWriteTime -Descending
 
-    # Check if there are more than 3 files
     if ($files.Count -gt 3) {
-        # Select files to delete (all except the 3 most recent)
         $filesToDelete = $files[3..($files.Count - 1)]
         foreach ($file in $filesToDelete) {
             try {
