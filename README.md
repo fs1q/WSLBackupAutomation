@@ -1,12 +1,13 @@
-# WSLBackupAutomation
-
-## Description
+# WSL Backup Automation
 
 PowerShell Script to automate the backup of a WSL Distribution
 
 This project automates the backup of a Windows Subsystem for Linux (WSL) distribution, specifically designed to export the specified distribution to a designated backup directory.
 
+## Requirements
 
+- Windows 10 version 2004 and higher (Build 19041 and higher) or Windows 11.
+- PowerShell.
 
 ## Features
 
@@ -14,71 +15,78 @@ This project automates the backup of a Windows Subsystem for Linux (WSL) distrib
 - Retention Policy: Keeps only the 3 most recent backup files, deleting older ones.
 - Error Handling: Provides feedback on the success or failure of the backup and cleanup processes.
 
+## WSL Backup Script
 
+- PowerShell Script: `WSLBackupAutomation.ps1`
+- Batch File: `RunWSLBackup.bat` (Optional)
 
-## Requirements
+### Automating Backups
 
-- Windows 10 version 2004 and higher (Build 19041 and higher) or Windows 11.
-- PowerShell.
+You can automate the backup process using either Task Scheduler or a Windows Service. Below are the steps for each method.
 
-
-
-## Installation
-
-1. Clone the Repository:
-   git clone https://github.com/fs1q/WSLBackupAutomation.git
-   cd WSLBackupAutomation
-
-2. Edit the Script:
-   - Open the 'WSLBackupAutomation.ps1' file in a text editor.
-   - Update the '$distributionName' variable to match the name of your WSL distribution (e.g., "Ubuntu").
-   - Set the '$backupDir' variable to the desired backup directory path.
-
-
-
-## Usage
-
-1. Run the Script Manually:
-   - Open PowerShell.
-   - Navigate to the directory where the script is located.
-   - Execute the script:
-     .\WSLBackupAutomation.ps1
-
-2. Check Backup Directory:
-   - After running the script, check the specified backup directory to confirm that the backup file has been created and that old backups have been cleaned up according to the retention policy.
-
-
-
-## Automating with Task Scheduler
-
-To automate the backup process, you can use Windows Task Scheduler to run the PowerShell script at specified intervals. Follow these steps:
+#### Method 1: Using Task Scheduler
 
 1. Open Task Scheduler:
-   - Press 'Win + R', type 'taskschd.msc', and press Enter.
+   - Press `Windows + R`, type `taskschd.msc`, and hit `Enter`.
 
 2. Create a New Task:
-   - Click on "Create Task..." in the right-hand Actions pane.
+   - In the right pane, click on Create Basic Task.
 
-3. General Tab:
-   - Name your task (suggestion: "WSL Backup").
-   - Select "Run only when user is logged on".
+3. Name Your Task:
+   - Give your task a name (Example: "WSL Backup") and click Next.
 
-4. Triggers Tab:
-   - Click "New..." and set the task to begin "On a schedule".
-   - Choose "Daily" and set the time you desire. Configure the advanced settings according to your needs.
+4. Set the Trigger:
+   - Choose how often you want the backup to run (Daily, Weekly, etc.) and click Next.
+   - Configure the specific settings for the trigger and click Next.
 
-5. Actions Tab:
-   - Click "New...".
-   - Set Action to "Start a program".
-   - In Program/script, enter 'powershell.exe'.
-   - In Add arguments (optional), enter:
+5. Action:
+   - Select Start a program and click Next.
+
+6. Program/Script:
+   - If you want to use the batch file, enter the path to `RunWSLBackup.bat` (Example: "C:\...\RunWSLBackup.bat").
+   - If you prefer to run the PowerShell script directly, enter `powershell.exe` in the Program/script field and add the following in the "Add arguments (optional)" field:
+     ```
      -ExecutionPolicy Bypass -File "C:\...\WSLBackupAutomation.ps1"
-   - Replace "C:\...\WSLBackupAutomation.ps1" with the actual path to your script.
+     ```
 
-6. Conditions and Settings Tabs:
-   - Adjust any additional settings as needed, then click OK to save the task.
+7. Finish:
+   - Review your settings and click Finish to create the task.
 
+#### Method 2: Using a Windows Service
 
+If you prefer to run the backup as a Windows Service, you can use a tool like NSSM (Non-Sucking Service Manager) to create a service that runs your batch file or PowerShell script.
+
+1. Download NSSM:
+   - Download NSSM from nssm.cc and extract it to a folder.
+
+2. Open Command Prompt as Administrator:
+   - Press `Windows + X` and select Command Prompt (Admin) or Windows PowerShell (Admin).
+
+3. Install the Service:
+   - Navigate to the folder where you extracted NSSM using the `cd` command.
+   - Run the following command to install the service:
+     ```
+     nssm install WSLBackupService
+     ```
+
+4. Configure the Service:
+   - In the NSSM GUI that appears:
+     - Path: Enter the path to `RunWSLBackup.bat` (Example:
+     `C:\...\RunWSLBackup.bat`).
+     - Startup directory: Set this to the directory where your batch file is located (Example:
+     `C:\...\`).
+     - Optionally, configure other settings like restart behavior.
+
+5. Start the Service:
+   - After configuring, click Install service.
+   - You can start the service using the following command:
+     ```
+     nssm start WSLBackupService
+     ```
+
+### Conclusion
+
+You now have two methods to automate the backup of your WSL distribution. Choose the one that best fits your needs. For any questions or issues, feel free to open an issue in this repository.
 
 ## License
 
