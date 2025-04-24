@@ -7,7 +7,7 @@ PowerShell Script to automate the backup of a WSL Distribution
 This project automates the backup of a Windows Subsystem for Linux (WSL) distribution, specifically designed to export the specified distribution to a designated backup directory.
 
 
-<br>
+
 ## Features
 
 - Automated Backup: Exports the specified WSL distribution to a tar file.
@@ -15,14 +15,14 @@ This project automates the backup of a Windows Subsystem for Linux (WSL) distrib
 - Error Handling: Provides feedback on the success or failure of the backup and cleanup processes.
 
 
-<br>
+
 ## Requirements
 
 - Windows 10 version 2004 and higher (Build 19041 and higher) or Windows 11.
 - PowerShell.
 
 
-<br>
+
 ## Installation
 
 1. Clone the Repository:
@@ -35,7 +35,7 @@ This project automates the backup of a Windows Subsystem for Linux (WSL) distrib
    - Set the '$backupDir' variable to the desired backup directory path.
 
 
-<br>
+
 ## Usage
 
 1. Run the Script Manually:
@@ -48,7 +48,7 @@ This project automates the backup of a Windows Subsystem for Linux (WSL) distrib
    - After running the script, check the specified backup directory to confirm that the backup file has been created and that old backups have been cleaned up according to the retention policy.
 
 
-<br>
+
 ## Automating with Task Scheduler
 
 To automate the backup process, you can use Windows Task Scheduler to run the PowerShell script at specified intervals. Follow these steps:
@@ -79,7 +79,7 @@ To automate the backup process, you can use Windows Task Scheduler to run the Po
    - Adjust any additional settings as needed, then click OK to save the task.
 
 
-<br>
+
 ## License
 
 This project is licensed under the [GNU General Public License (GPL)](https://www.gnu.org/licenses/gpl-3.0.html). You are free to use, modify, and distribute this software, but any derivative work must also be licensed under the GPL.
