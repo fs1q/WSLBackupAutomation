@@ -1,7 +1,7 @@
 ############################################################
 #                                                          #
 #  Script: WSLBackupAutomation                             #
-#  Last Updated: 2025-04-23                  Version 1.1   #
+#  Last Updated: 2025-04-23                  Version 1.2   #
 #  Written by: Fabio Siqueira                              #
 #                                                          #
 ############################################################
@@ -21,9 +21,14 @@ $backupPath = Join-Path -Path $backupDir -ChildPath $backupFile
 wsl --export $distributionName $backupPath
 Write-Host "Backup created: $backupPath"
 
-# Cleanup old backups (keep only the latest one)
+# Cleanup old backups (keep only the 3 most recent)
 $files = Get-ChildItem -Path $backupDir -Filter "ubuntu_export_*.tar" | Sort-Object LastWriteTime -Descending
-if ($files.Count -gt 1) {
-    Remove-Item -Path $files[1..($files.Count - 1)].FullName -Force
-    Write-Host "Deleted old backups, keeping the latest one."
+if ($files.Count -gt 3) {
+    $filesToDelete = $files[3..($files.Count - 1)]
+    foreach ($file in $filesToDelete) {
+        Remove-Item -Path $file.FullName -Force
+        Write-Host "Deleted old backup: $($file.FullName)"
+    }
+} else {
+    Write-Host "No old backups to delete. Keeping the latest 3 files."
 }
